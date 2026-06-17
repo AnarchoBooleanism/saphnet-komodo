@@ -1,0 +1,7 @@
+# Test file
+
+[[resource-sync]]
+name = "control-server_stack-sync"
+[resource-sync.config]
+linked_repo = "saphnet-compose-configs"
+resource_path = ["control-server.toml"]
