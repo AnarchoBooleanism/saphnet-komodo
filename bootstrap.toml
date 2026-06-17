@@ -7,7 +7,7 @@
 name = "saphnet-komodo"
 description = "The main repository for Komodo resource syncs"
 [repo.config]
-# server = ?
+server = "control-server"
 git_provider = "github.com"
 git_account = "AnarchoBooleanism"
 repo = "AnarchoBooleanism/saphnet-komodo"
@@ -17,7 +17,7 @@ repo = "AnarchoBooleanism/saphnet-komodo"
 name = "saphnet-compose-configs"
 description = "The main repository for Compose stacks"
 [repo.config]
-# server = ?
+server = "control-server"
 git_provider = "github.com"
 git_account = "AnarchoBooleanism"
 repo = "AnarchoBooleanism/saphnet-compose-configs"
