@@ -29,3 +29,4 @@ name = "saphnet-komodo_sync"
 [resource-sync.config]
 linked_repo = "saphnet-komodo"
 resource_path = ["variables.toml", "servers.toml", "build.toml", "procedures.toml"]
+include_variables = true
