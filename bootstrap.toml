@@ -28,5 +28,5 @@ repo = "AnarchoBooleanism/saphnet-compose-configs"
 name = "saphnet-komodo_sync"
 [resource-sync.config]
 linked_repo = "saphnet-komodo"
-resource_path = ["variables.toml", "servers.toml", "build.toml", "procedures.toml"]
+resource_path = ["variables.toml", "servers.toml", "procedures.toml"]
 include_variables = true

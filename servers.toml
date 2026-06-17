@@ -1,4 +1,4 @@
-## TODO: Servers themselves, then resource sync per server
+## NOTE: resource-sync resources in TOML files seem to have no effect on Komodo server's Resource Syncs
 
 [[server]]
 name = "control-server"
@@ -22,6 +22,12 @@ tags = ["core", "high-availability"]
 address = "https://docker-host-core.int-net.saphnet.xyz:8120"
 enabled = true
 
+[[resource-sync]]
+name = "docker-host-core_stack-sync"
+[resource-sync.config]
+linked_repo = "saphnet-compose-configs"
+resource_path = ["docker-host-core.toml"]
+
 ##
 
 [[server]]
@@ -31,6 +37,12 @@ tags = ["gpu", "main"]
 address = "https://docker-host-pve3.int-net.saphnet.xyz:8120"
 enabled = true
 
+[[resource-sync]]
+name = "docker-host-pve3_stack-sync"
+[resource-sync.config]
+linked_repo = "saphnet-compose-configs"
+resource_path = ["docker-host-pve3.toml"]
+
 ##
 
 [[server]]
@@ -39,6 +51,12 @@ tags = ["main"]
 [server.config]
 address = "https://docker-host-pve4.int-net.saphnet.xyz:8120"
 enabled = true
+
+[[resource-sync]]
+name = "docker-host-pve4_stack-sync"
+[resource-sync.config]
+linked_repo = "saphnet-compose-configs"
+resource_path = ["docker-host-pve4.toml"]
 
 ##
 
@@ -50,8 +68,13 @@ address = "https://vps1:8120"
 external_address = "https://vps1.saphnet.xyz"
 enabled = true
 
+[[resource-sync]]
+name = "vps1_stack-sync"
+[resource-sync.config]
+linked_repo = "saphnet-compose-configs"
+resource_path = ["vps1.toml"]
 
-# TODO: Reformat this
+## Builders
 
 [[builder]]
 name = "docker-host-pve3"
