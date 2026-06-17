@@ -38,7 +38,7 @@ enabled = true
 
 [[server]]
 name = "vps1"
-tags = ["nginx", "vps"]
+tags = ["vps"]
 [server.config]
 address = "https://vps1:8120"
 external_address = "https://vps1.saphnet.xyz"
