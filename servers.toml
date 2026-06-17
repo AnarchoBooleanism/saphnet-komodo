@@ -1,0 +1,62 @@
+## TODO: Servers themselves, then resource sync per server
+
+[[server]]
+name = "control-server"
+tags = ["control"]
+[server.config]
+address = "https://periphery:8120"
+enabled = true
+
+##
+
+[[server]]
+name = "docker-host-core"
+tags = ["core", "high-availability"]
+[server.config]
+address = "https://docker-host-core.int-net.saphnet.xyz:8120"
+enabled = true
+
+##
+
+[[server]]
+name = "docker-host-pve3"
+tags = ["gpu", "main"]
+[server.config]
+address = "https://docker-host-pve3.int-net.saphnet.xyz:8120"
+enabled = true
+
+##
+
+[[server]]
+name = "docker-host-pve4"
+tags = ["main"]
+[server.config]
+address = "https://docker-host-pve4.int-net.saphnet.xyz:8120"
+enabled = true
+
+##
+
+[[server]]
+name = "vps1"
+tags = ["nginx", "vps"]
+[server.config]
+address = "https://vps1:8120"
+external_address = "https://vps1.saphnet.xyz"
+enabled = true
+
+
+# TODO: Reformat this
+
+[[builder]]
+name = "docker-host-pve3"
+[builder.config]
+type = "Server"
+params.server_id = "docker-host-pve3"
+
+##
+
+[[builder]]
+name = "docker-host-pve4"
+[builder.config]
+type = "Server"
+params.server_id = "docker-host-pve4"

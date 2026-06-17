@@ -1,0 +1,31 @@
+## Non-secret variables
+
+[[variable]]
+name = "TAILSCALE_IP_VPS1"
+value = "100.121.37.70"
+is_secret = false
+
+[[variable]]
+name = "CERTBOT_EMAIL"
+value = "homelab@saphnet.xyz"
+is_secret = false
+
+[[variable]]
+name = "SAPHNET_S3_SERVER_REGION"
+value = "garage"
+is_secret = false
+
+[[variable]]
+name = "SAPHNET_S3_SERVER_ENDPOINT"
+value = "https://s3.nas1.int.saphnet.xyz"
+is_secret = false
+
+[[variable]]
+name = "TAILSCALE_IP_PVE3"
+value = "100.69.84.125"
+is_secret = false
+
+[[variable]]
+name = "TAILSCALE_IP_CORE"
+value = "100.89.160.16"
+is_secret = false
