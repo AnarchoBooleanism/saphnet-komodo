@@ -5,10 +5,12 @@ name = "control-server"
 tags = ["control"]
 [server.config]
 address = "https://periphery:8120"
+region = "Homelab"
 enabled = true
 
 [[resource-sync]]
 name = "control-server_stack-sync"
+tags = ["stack-sync", "iac"]
 [resource-sync.config]
 linked_repo = "saphnet-compose-configs"
 resource_path = ["control-server.toml"]
@@ -20,10 +22,12 @@ name = "docker-host-core"
 tags = ["core", "high-availability"]
 [server.config]
 address = "https://docker-host-core.int-net.saphnet.xyz:8120"
+region = "Homelab"
 enabled = true
 
 [[resource-sync]]
 name = "docker-host-core_stack-sync"
+tags = ["stack-sync", "iac"]
 [resource-sync.config]
 linked_repo = "saphnet-compose-configs"
 resource_path = ["docker-host-core.toml"]
@@ -35,10 +39,12 @@ name = "docker-host-pve3"
 tags = ["gpu", "main"]
 [server.config]
 address = "https://docker-host-pve3.int-net.saphnet.xyz:8120"
+region = "Homelab"
 enabled = true
 
 [[resource-sync]]
 name = "docker-host-pve3_stack-sync"
+tags = ["stack-sync", "iac"]
 [resource-sync.config]
 linked_repo = "saphnet-compose-configs"
 resource_path = ["docker-host-pve3.toml"]
@@ -50,10 +56,12 @@ name = "docker-host-pve4"
 tags = ["main"]
 [server.config]
 address = "https://docker-host-pve4.int-net.saphnet.xyz:8120"
+region = "Homelab"
 enabled = true
 
 [[resource-sync]]
 name = "docker-host-pve4_stack-sync"
+tags = ["stack-sync", "iac"]
 [resource-sync.config]
 linked_repo = "saphnet-compose-configs"
 resource_path = ["docker-host-pve4.toml"]
@@ -66,10 +74,12 @@ tags = ["vps"]
 [server.config]
 address = "https://vps1:8120"
 external_address = "https://vps1.saphnet.xyz"
+region = "San Jose, CA (VPS)"
 enabled = true
 
 [[resource-sync]]
 name = "vps1_stack-sync"
+tags = ["stack-sync", "iac"]
 [resource-sync.config]
 linked_repo = "saphnet-compose-configs"
 resource_path = ["vps1.toml"]
@@ -78,6 +88,7 @@ resource_path = ["vps1.toml"]
 
 [[builder]]
 name = "docker-host-pve3"
+tags = ["iac"]
 [builder.config]
 type = "Server"
 params.server_id = "docker-host-pve3"
@@ -86,6 +97,7 @@ params.server_id = "docker-host-pve3"
 
 [[builder]]
 name = "docker-host-pve4"
+tags = ["iac"]
 [builder.config]
 type = "Server"
 params.server_id = "docker-host-pve4"
