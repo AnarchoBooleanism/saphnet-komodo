@@ -36,7 +36,7 @@ description = "Update both the saphnet-compose-configs and saphnet-komodo reposi
 tags = ["main", "iac"]
 config.schedule_enabled = true
 config.schedule_format = "Cron"
-config.schedule = "10 * * * *" # Every hour at minute 10
+config.schedule = "0 10 * * * *" # Every hour at minute 10
 
 [[procedure.config.stage]]
 name = "Stage 1"
