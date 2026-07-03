@@ -1,5 +1,3 @@
-## TODO: Procedure to pull repo and deploy changed stuff on a schedule
-
 [[procedure]]
 name = "Backup Core Database"
 description = "Triggers the Core database backup at the scheduled time."
@@ -28,4 +26,56 @@ name = "Stage 1"
 enabled = true
 executions = [
   { execution.type = "GlobalAutoUpdate", execution.params.skip_auto_update = false, enabled = true }
+]
+
+## 
+
+[[procedure]]
+name = "saphnet-repo-sync"
+description = "Update both the saphnet-compose-configs and saphnet-komodo repositories."
+tags = ["iac"]
+config.schedule_enabled = true
+config.schedule_format = "Cron"
+config.schedule = "10 * * * *" # Every hour at minute 10
+
+[[procedure.config.stage]]
+name = "Stage 1"
+enabled = true
+executions = [
+    { execution.type = "BatchPullRepo", execution.params.pattern = """
+saphnet-compose-configs
+saphnet-komodo""", enabled = true }
+]
+
+## 
+
+[[procedure]]
+name = "saphnet-run-iac-stack-sync"
+description = """
+Run all Resource Syncs for IaC-managed Stacks, and redeploy any Stacks with changes.
+
+NOTE: Make sure to run saphnet-repo-sync and manually confirm all of the Resource Sync changes before running this!
+"""
+tags = ["iac"]
+config.schedule_enabled = false
+config.schedule_format = "Cron"
+
+[[procedure.config.stage]]
+name = "Stage 1"
+enabled = true
+# NOTE: Since there is no Batch Run Sync, make sure that, when there is a new stack-sync
+# resource sync for a server, that it has an entry in this list! 
+executions = [
+  { execution.type = "RunSync", execution.params.sync = "control-server_stack-sync", enabled = true },
+  { execution.type = "RunSync", execution.params.sync = "docker-host-core_stack-sync", enabled = true },
+  { execution.type = "RunSync", execution.params.sync = "docker-host-pve3_stack-sync", enabled = true },
+  { execution.type = "RunSync", execution.params.sync = "docker-host-pve4_stack-sync", enabled = true },
+  { execution.type = "RunSync", execution.params.sync = "vps1_stack-sync", enabled = true },
+]
+
+[[procedure.config.stage]]
+name = "Stage 2"
+enabled = true
+executions = [
+  { execution.type = "BatchRunProcedure", execution.params.pattern = "^.*_redeploy-changed$", enabled = true }
 ]
