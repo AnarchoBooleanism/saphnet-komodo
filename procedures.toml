@@ -33,7 +33,7 @@ executions = [
 [[procedure]]
 name = "saphnet-repo-sync"
 description = "Update both the saphnet-compose-configs and saphnet-komodo repositories."
-tags = ["iac"]
+tags = ["main", "iac"]
 config.schedule_enabled = true
 config.schedule_format = "Cron"
 config.schedule = "10 * * * *" # Every hour at minute 10
@@ -56,7 +56,7 @@ Run all Resource Syncs for IaC-managed Stacks, and redeploy any Stacks with chan
 
 NOTE: Make sure to run saphnet-repo-sync and manually confirm all of the Resource Sync changes before running this!
 """
-tags = ["iac"]
+tags = ["main", "iac"]
 config.schedule_enabled = false
 config.schedule_format = "Cron"
 
