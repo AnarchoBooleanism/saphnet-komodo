@@ -72,7 +72,7 @@ type = "Server"
 params.server_id = "example-server"
 ```
 
-Again, each server's Builder resource configuration is separated from each other by lines that consist of "##".
+Again, each server's Builder resource configuration is separated from each other by lines that consist of `##`.
 
 Each Builder resource is defined with `[[builder]]`. In this definition, the Builder resource is named `example-server`, after the Server resource, and is given the `iac` tag (again, all non-Server resources should be given `iac` tags, to indicate that they are being managed through GitOps).
 
@@ -106,7 +106,7 @@ saphnet-komodo""", enabled = true }
 ]
 ```
 
-Like the other resources in the other files, individual Procedures are generally separated from each other by lines that consist of "##".
+Like the other resources in the other files, individual Procedures are generally separated from each other by lines that consist of `##`.
 
 Each Procedure is defined with `[[procedure]]`. In this definition, the Procedure is named as `saphnet-repo-sync` and given a description. It is given the tags `main` and `iac`; `main`, in this case, means that the Procedure is a core Procedure that is expected to be used often, and `iac` is given as the Procedure is a resource managed through GitOps (with this repository).
 
