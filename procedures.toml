@@ -77,5 +77,6 @@ executions = [
 name = "Stage 2"
 enabled = true
 executions = [
-  { execution.type = "BatchRunProcedure", execution.params.pattern = "^.*_redeploy-changed$", enabled = true }
+  # Ignore syntax errors; Komodo expects unescaped backslashes for regex patterns
+  { execution.type = "BatchRunProcedure", execution.params.pattern = "\^.*_redeploy-changed$\", enabled = true }
 ]

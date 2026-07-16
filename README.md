@@ -118,6 +118,8 @@ In this example, the sole stage for the Procedure is named as `Stage 1`, and run
 
 If there are multiple stages, they will run in the order that is defined in the resource file.
 
+**NOTE**: When defining a Batch-type Execution for a Deployment, where one or more of the patterns are regex expressions, make sure that the pattern is wrapped in `\` before and after. For example, the regex expression, `^.*_redeploy-changed$`, would be represented as `\^.*_redeploy-changed$\`. Note that the backslashes are not escaped; this will result in linter errors, but Komodo expects the backslashes to be unescaped, as they would otherwise be considered as part of the regex pattern itself, leading to errors when running the Procedure.
+
 ## On variables
 
 Sometimes, there may be specific values that Stacks may need for specific functionality, but may be too fast-changing or dynamic to be sensibly defined within Compose files (or other related config files), or, for some other reason, we would prefer to define such values as environment variables to be injected at deploy-time; furthermore, these values may need to be defined multiple times across multiple Stacks, and, so, we may desire a way to have a single source of truth for these values to avoid the error-prone process of manually updating values across multiple locations. In this case, Komodo provides the Variable resource, which acts as a way to store (and change) specific values, under a specific name. Variables can be referred to, in other resources, when defining environment variables at deploy-time.
