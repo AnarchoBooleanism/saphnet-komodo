@@ -2,7 +2,7 @@
 
 [[variable]]
 name = "TAILSCALE_IP_VPS1"
-value = "100.121.37.70"
+value = "100.126.143.77"
 is_secret = false
 
 [[variable]]
