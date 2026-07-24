@@ -118,7 +118,7 @@ In this example, the sole stage for the Procedure is named as `Stage 1`, and run
 
 If there are multiple stages, they will run in the order that is defined in the resource file.
 
-**NOTE**: When defining a Batch-type Execution for a Deployment, where one or more of the patterns are regex expressions, make sure that the pattern is wrapped in `\` before and after. For example, the regex expression, `^.*_redeploy-changed$`, would be represented as `\^.*_redeploy-changed$\`. Note that the backslashes are not escaped; this will result in linter errors, but Komodo expects the backslashes to be unescaped, as they would otherwise be considered as part of the regex pattern itself, leading to errors when running the Procedure.
+**NOTE**: When defining a Batch-type Execution for a Deployment, where one or more of the patterns are regex expressions, make sure that the pattern is wrapped in `\` before and after. For example, the regex expression, `^.*_redeploy-changed$`, would be represented as `\^.*_redeploy-changed$\`. Note that the backslashes are escaped, to avoid parsing errors with TOML.
 
 ## On variables
 
