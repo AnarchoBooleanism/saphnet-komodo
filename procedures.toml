@@ -28,15 +28,14 @@ executions = [
   { execution.type = "GlobalAutoUpdate", execution.params.skip_auto_update = false, enabled = true }
 ]
 
-## 
+##
 
 [[procedure]]
 name = "saphnet-repo-sync"
 description = "Update both the saphnet-compose-configs and saphnet-komodo repositories."
 tags = ["main", "iac"]
-config.schedule_enabled = true
+config.schedule_enabled = false
 config.schedule_format = "Cron"
-config.schedule = "0 10 * * * *" # Every hour at minute 10
 
 [[procedure.config.stage]]
 name = "Stage 1"
@@ -78,4 +77,32 @@ name = "Stage 2"
 enabled = true
 executions = [
   { execution.type = "BatchRunProcedure", execution.params.pattern = "\\^.*_redeploy-changed$\\", enabled = true }
+]
+
+##
+
+[[procedure]]
+name = "saphnet-main-sync"
+description = """
+Regularly update all IaC repositories and sync Komodo state with the state of the repositories.
+
+Runs saphnet-repo-sync and then saphnet-run-iac-stack-sync.
+"""
+tags = ["main", "iac"]
+config.schedule_enabled = true
+config.schedule_format = "Cron"
+config.schedule = "0 */10 * * * *" # Every 10 minutes
+
+[[procedure.config.stage]]
+name = "Stage 1"
+enabled = true
+executions = [
+  { execution.type = "RunProcedure", execution.params.procedure = "saphnet-repo-sync", enabled = true },
+]
+
+[[procedure.config.stage]]
+name = "Stage 2"
+enabled = true
+executions = [
+  { execution.type = "RunProcedure", execution.params.procedure = "saphnet-run-iac-stack-sync", enabled = true },
 ]
