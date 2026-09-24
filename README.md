@@ -59,6 +59,24 @@ Each Resource Sync resource is defined with `[[resource-sync]]`. In this definit
 
 Under `[resource-sync.config]`, is the name of the Repo resource under which resource files are found, `saphnet-compose-configs`. After the Repo being linked to is a list of resource files to use for the Resource Sync, which is simply `example-server.toml`; generally, the resource file used for this type of Server-specific Resource Sync is at the root of `saphnet-compose-configs` and is named after the server that is being targeted.
 
+As well, since our Komodo setup uses Tailscale, and we may want to have Stacks be able to bind to only the Tailscale interfaces (by using a Tailscale IP address), you will want to add an entry to the `saphnet-update-tailscale-addresses` Action in `actions.toml`, with the Tailscale hostname and a short name of the Server, like this:
+```
+[[action]]
+name = "saphnet-update-tailscale-addresses"
+... # Omitting for brevity
+[action.config]
+...
+file_contents = """
+// The final variable names will be similar to "TAILSCALE_IP_VPS1"
+const VARIABLE_BASE = "TAILSCALE_IP_";
+const SERVERS = [
+  { hostname: "control-server", varSuffix: "CONTROL" },
+  ...
+];
+```
+
+The final variable name will be in the format `TAILSCALE_IP_<SERVER_NAME>`, so for the `control-server` Server, it would be `TAILSCALE_IP_CONTROL` (as `CONTROL` is the selected short name). The short name should be in uppercase too, for consistency purposes (it will be corrected to uppercase in the script, if not).
+
 In addition, depending on the server (based on whether the server is able to dedicate extra resource to it), a server can also have a Builder resource associated with it; this means that the server can be used for building Docker images from Dockerfiles:
 
 ```toml
@@ -112,13 +130,15 @@ Each Procedure is defined with `[[procedure]]`. In this definition, the Procedur
 
 Procedures, like in this example, can run on schedules, defined with `config.schedule_enabled`. The format of the schedule can either be in the cron format (with `Cron`) or in plain English (with `English`), which gets automatically converted into the cron format. Note that the format that Komodo expects is the 6-field format, in the order of second, minute, hour, day of month, month, and day of week. In our example, we have `0 10 * * * *`, which means to run only when the second is 0, the minute is 10, and at any hour, day, day of the month, month, and day of the week; in other words, every hour at minute 10 (e.g. at 02:10). For reference, [here is a guide for writing cron expressions](https://dev.to/arenasbob2024cell/cron-expressions-explained-from-basics-to-advanced-scheduling-215n).
 
-Going further, each Procedure has one or more stages, which run in sequential order (not in parallel), defined with `[[procedure.config.stage]]`, under the Procedure being defined. Each stage has any number of executions, which are tasks (from a which) that Komodo runs ([this is the list of possible executions under Komodo](https://docs.rs/komodo_client/latest/komodo_client/api/execute/)), which all run in parallel. If you need to perform tasks that are more complex than what Komodo provides, [you can create and execute Actions](https://komo.do/docs/automate/procedures#actions), which are Typescript scripts that call the Komodo API.
+Going further, each Procedure has one or more stages, which run in sequential order (not in parallel), defined with `[[procedure.config.stage]]`, under the Procedure being defined. Each stage has any number of executions, which are tasks (from a which) that Komodo runs ([this is the list of possible executions under Komodo](https://docs.rs/komodo_client/latest/komodo_client/api/execute/)), which all run in parallel.
 
 In this example, the sole stage for the Procedure is named as `Stage 1`, and runs the `BatchPullRepo` execution, which updates multiple Repo resources (that match the pattern(s) given to it), by pulling from the remote Git servers that host the files behind the Repos. Note that `enabled` is set to `true`, so that Komodo recognizes it as a Procedure that can be run.
 
 If there are multiple stages, they will run in the order that is defined in the resource file.
 
 **NOTE**: When defining a Batch-type Execution for a Deployment, where one or more of the patterns are regex expressions, make sure that the pattern is wrapped in `\` before and after. For example, the regex expression, `^.*_redeploy-changed$`, would be represented as `\^.*_redeploy-changed$\`. Note that the backslashes are escaped, to avoid parsing errors with TOML.
+
+If you need to perform tasks that are more complex than what Komodo provides, [you can create and execute Actions](https://komo.do/docs/automate/procedures#actions), which are Typescript scripts that call the Komodo API. Actions generally go in `actions.toml`.
 
 ## On variables
 

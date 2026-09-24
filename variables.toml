@@ -1,9 +1,6 @@
 ## Non-secret variables
 
-[[variable]]
-name = "TAILSCALE_IP_VPS1"
-value = "100.123.238.16"
-is_secret = false
+## NOTE: TAILSCALE_IP_ variables are taken care of by the saphnet-update-tailscale-addresses action!
 
 [[variable]]
 name = "CERTBOT_EMAIL"
@@ -18,14 +15,4 @@ is_secret = false
 [[variable]]
 name = "SAPHNET_S3_SERVER_ENDPOINT"
 value = "https://s3.nas1.int.saphnet.xyz"
-is_secret = false
-
-[[variable]]
-name = "TAILSCALE_IP_PVE3"
-value = "100.69.84.125"
-is_secret = false
-
-[[variable]]
-name = "TAILSCALE_IP_CORE"
-value = "100.89.160.16"
 is_secret = false

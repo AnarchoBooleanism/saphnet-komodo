@@ -6,7 +6,7 @@ config.schedule_timezone = "America/Los_Angeles"
 config.schedule = "Every day at 01:00"
 
 [[procedure.config.stage]]
-name = "Stage 1"
+name = "Backup Core Database"
 enabled = true
 executions = [
   { execution.type = "BackupCoreDatabase", execution.params = {}, enabled = true }
@@ -22,7 +22,7 @@ config.schedule_timezone = "America/Los_Angeles"
 config.schedule = "Every day at 03:00"
 
 [[procedure.config.stage]]
-name = "Stage 1"
+name = "Global Auto Update"
 enabled = true
 executions = [
   { execution.type = "GlobalAutoUpdate", execution.params.skip_auto_update = false, enabled = true }
@@ -38,7 +38,7 @@ config.schedule_enabled = false
 config.schedule_format = "Cron"
 
 [[procedure.config.stage]]
-name = "Stage 1"
+name = "Pull Repositories"
 enabled = true
 executions = [
     { execution.type = "BatchPullRepo", execution.params.pattern = """
@@ -60,7 +60,7 @@ config.schedule_enabled = false
 config.schedule_format = "Cron"
 
 [[procedure.config.stage]]
-name = "Stage 1"
+name = "Run Stack Syncs"
 enabled = true
 # NOTE: Since there is no Batch Run Sync, make sure that, when there is a new stack-sync
 # resource sync for a server, that it has an entry in this list! 
@@ -73,7 +73,7 @@ executions = [
 ]
 
 [[procedure.config.stage]]
-name = "Stage 2"
+name = "Redeploy Changed Stacks"
 enabled = true
 executions = [
   { execution.type = "BatchRunProcedure", execution.params.pattern = "\\^.*_redeploy-changed$\\", enabled = true }
@@ -86,7 +86,7 @@ name = "saphnet-main-sync"
 description = """
 Regularly update all IaC repositories and sync Komodo state with the state of the repositories.
 
-Runs saphnet-repo-sync and then saphnet-run-iac-stack-sync.
+Updates variables, runs saphnet-repo-sync, and then runs saphnet-run-iac-stack-sync.
 """
 tags = ["main", "iac"]
 config.schedule_enabled = true
@@ -94,14 +94,21 @@ config.schedule_format = "Cron"
 config.schedule = "0 */10 * * * *" # Every 10 minutes
 
 [[procedure.config.stage]]
-name = "Stage 1"
+name = "Update Variables"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "saphnet-update-tailscale-addresses", execution.params.args = {}, enabled = true },
+]
+
+[[procedure.config.stage]]
+name = "Pull Repositories"
 enabled = true
 executions = [
   { execution.type = "RunProcedure", execution.params.procedure = "saphnet-repo-sync", enabled = true },
 ]
 
 [[procedure.config.stage]]
-name = "Stage 2"
+name = "Run Stack Syncs"
 enabled = true
 executions = [
   { execution.type = "RunProcedure", execution.params.procedure = "saphnet-run-iac-stack-sync", enabled = true },
