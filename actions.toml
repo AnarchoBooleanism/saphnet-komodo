@@ -6,7 +6,7 @@ Automatically updates the values of TAILSCALE_IP address with the Tailscale IP a
 tags = ["iac"]
 [action.config]
 schedule_format = "Cron"
-schedule_enabled = "false"
+schedule_enabled = false
 file_contents = """
 // The final variable names will be similar to "TAILSCALE_IP_VPS1"
 const VARIABLE_BASE = "TAILSCALE_IP_";
