@@ -1,0 +1,86 @@
+[[action]]
+name = "saphnet-update-tailscale-addresses"
+description = """
+Automatically updates the values of TAILSCALE_IP address with the Tailscale IP addresses of all Servers.
+"""
+tags = ["iac"]
+[action.config]
+schedule_format = "Cron"
+schedule_enabled = "false"
+file_contents = """
+// The final variable names will be similar to "TAILSCALE_IP_VPS1"
+const VARIABLE_BASE = "TAILSCALE_IP_";
+const SERVERS = [
+  { hostname: "control-server", varSuffix: "CONTROL" },
+  { hostname: "docker-host-core", varSuffix: "CORE" },
+  { hostname: "docker-host-pve3", varSuffix: "PVE3" },
+  { hostname: "docker-host-pve4", varSuffix: "PVE4" },
+  { hostname: "vps1", varSuffix: "VPS1" }
+];
+
+// The Periphery agent on this server needs access to Tailscale MagicDNS
+const TARGET_SERVER = "control-server";
+
+for (const server of SERVERS) {
+  let resolvedIp = "";
+
+  console.log(`Checking server ${server.hostname}...`);
+  // awk SHOULD make sure we only get one line (and no trailing newlines either)...
+  await komodo.execute_server_terminal({
+    server: TARGET_SERVER,
+    command: `getent ahostsv4 ${server.hostname} | awk '{printf $1; exit}'`,
+    init: { command: "bash" },
+  }, {
+    onLine: (line) => {
+      if (line.trim()) {
+        console.log(`> ${line}`);
+        resolvedIp = line.trim();
+      }
+    },
+    onFinish: (code) => {
+      if (code !== "0") {
+        console.log(`Encountered an error while checking ${server.hostname}, code ${code}`);
+      } else {
+        console.log(`Success checking ${server.hostname}!`);
+      }
+    }
+  });
+
+  if (resolvedIp) {
+    let variableName = `${VARIABLE_BASE}${server.varSuffix}`.toUpperCase();
+
+    // Check if variable exists, this is clunky but it hopefully is O(1),
+    // depending on the back-end implementation
+    // (There doesn't exactly exist a clean "CheckVariableExists" struct)
+    try {
+      await komodo.read("GetVariable", { name: `${variableName}` });
+    } catch (error) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        error.status === 500 &&
+        typeof error.result?.error === 'string' &&
+        error.result.error.includes("no variable found with given name")
+      ) {
+        console.log(`Variable ${variableName} does not exist, creating variable...`)
+        await komodo.write("CreateVariable", {
+          name: `${variableName}`
+        });
+        console.log(`Variable ${variableName} created!`);
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
+    }
+    
+    console.log(`Updating variable ${variableName} to ${resolvedIp}`);
+    await komodo.write("UpdateVariableValue", {
+      name: `${variableName}`,
+      value: resolvedIp,
+    });
+  } else {
+    console.error(`Failed to resolve IP for ${server.hostname}`);
+  }
+
+  console.log();
+}
+"""
