@@ -74,7 +74,7 @@ tags = ["vps"]
 [server.config]
 address = "https://vps1:8120"
 external_address = "https://vps1.saphnet.xyz"
-region = "San Jose, CA (VPS)"
+region = "Los Angeles, CA (VPS)"
 enabled = true
 
 [[resource-sync]]
