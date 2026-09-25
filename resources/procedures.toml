@@ -70,7 +70,7 @@ executions = [
 name = "Redeploy Changed Stacks"
 enabled = true
 executions = [
-  { execution.type = "BatchDeployStackIfChanged", execution.params.tags = ["iac"], enabled = true }
+  { execution.type = "BatchDeployStackIfChanged", execution.params.pattern = "*", execution.params.tags = ["iac"], enabled = true }
 ]
 
 ##
