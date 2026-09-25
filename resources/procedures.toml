@@ -62,21 +62,15 @@ config.schedule_format = "Cron"
 [[procedure.config.stage]]
 name = "Run Stack Syncs"
 enabled = true
-# NOTE: Since there is no Batch Run Sync, make sure that, when there is a new stack-sync
-# resource sync for a server, that it has an entry in this list! 
 executions = [
-  { execution.type = "RunSync", execution.params.sync = "control-server_stack-sync", enabled = true },
-  { execution.type = "RunSync", execution.params.sync = "docker-host-core_stack-sync", enabled = true },
-  { execution.type = "RunSync", execution.params.sync = "docker-host-pve3_stack-sync", enabled = true },
-  { execution.type = "RunSync", execution.params.sync = "docker-host-pve4_stack-sync", enabled = true },
-  { execution.type = "RunSync", execution.params.sync = "vps1_stack-sync", enabled = true },
+  { execution.type = "RunSync", execution.params.sync = "server-stack-syncs", enabled = true }
 ]
 
 [[procedure.config.stage]]
 name = "Redeploy Changed Stacks"
 enabled = true
 executions = [
-  { execution.type = "BatchRunProcedure", execution.params.pattern = "\\^.*_redeploy-changed$\\", enabled = true }
+  { execution.type = "BatchDeployStackIfChanged", execution.params.tags = ["iac"], enabled = true }
 ]
 
 ##
@@ -86,7 +80,7 @@ name = "saphnet-main-sync"
 description = """
 Regularly update all IaC repositories and sync Komodo state with the state of the repositories.
 
-Updates variables, runs saphnet-repo-sync, and then runs saphnet-run-iac-stack-sync.
+Updates variables, syncs the saphnet-compose-configs repo, and then runs saphnet-run-iac-stack-sync.
 """
 tags = ["main", "iac"]
 config.schedule_enabled = true
@@ -104,12 +98,12 @@ executions = [
 name = "Pull Repositories"
 enabled = true
 executions = [
-  { execution.type = "RunProcedure", execution.params.procedure = "saphnet-repo-sync", enabled = true },
+  { execution.type = "PullRepo", execution.params.repo = "saphnet-compose-configs", enabled = true }
 ]
 
 [[procedure.config.stage]]
 name = "Run Stack Syncs"
 enabled = true
 executions = [
-  { execution.type = "RunProcedure", execution.params.procedure = "saphnet-run-iac-stack-sync", enabled = true },
+  { execution.ptype = "RunProcedure", execution.params.rocedure = "saphnet-run-iac-stack-sync", enabled = true },
 ]
