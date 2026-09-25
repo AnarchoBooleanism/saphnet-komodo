@@ -24,7 +24,7 @@ As well, since `saphnet-nixos-configs` handles the bootstrapping process for Kom
 
 ## Adding new servers
 
-To add new Komodo servers to the repository for Komodo Core to look for, you will need to add entries for their corresponding Server resources, Resource Syncs resources for server-specific Stacks, and, depending on the type of server, Builder resources, to the `servers.toml` file.
+To add new Komodo servers to the repository for Komodo Core to look for, after adding a resource file for the server in the `servers` directory in the `saphnet-compose-configs` repository (the `server-stack-syncs` Sync will automatically take care of them), you will need to add entries for their corresponding Server resources, and depending on the type of server, Builder resources, to the `servers.toml` file.
 
 Here is an example of what a portion of a configuration would look like for a server named `example-server`, in `servers.toml`:
 
@@ -38,26 +38,13 @@ tags = ["gpu", "high-availability"]
 address = "https://example.server.saphnet.xyz:8120"
 region = "Example region"
 enabled = true
-
-[[resource_sync]]
-name = "example-server_stack-sync"
-tags = ["stack-sync", "iac"]
-[resource_sync.config]
-linked_repo = "saphnet-compose-configs"
-resource_path = ["example-server.toml"]
 ```
 
 Firstly, note that each server's configuration is separated from each other by lines that consist of `##`.
 
 In this example, the corresponding Server resource is defined with `[[server]]`, with all configuration under that line. It is named as `example-server`, and has the tags `gpu` and `high-availability`; generally, tags are used to describe a server's main function and abilities. Under `[server.config]`, is the URL through which Komodo Periphery on the server can be accessed (`https://example.server.saphnet.xyz:8120`), the name for the region that it falls under (`Example region`), and then the fact that the Server resource is enabled.
 
-Furthermore, since, for our purposes, Komodo servers are generally for running Stacks, we have a definition for a Resource Sync resource, tied to a resource file in the `saphnet-compose-configs` repository, for synchronizing the state of Stack resources to the state defined in the `saphnet-compose-configs`. For our purposes, we only need to care about having this type of Resource Sync for each server, as it is the job of the resource file being referred to care about handling individual Stack resources.
-
-Each Resource Sync resource is defined with `[[resource_sync]]`. In this definition, the Resource Sync is named as `example-server_stack-sync`; generally, these types of Resource Syncs are named after their target servers, with `_stack-sync` affixed at the end. This resource, then, has the tags `stack-sync` and `iac` associated with it; all Resource Syncs of this kind should have the `stack-sync` tag, and all non-Server resources managed through GitOps, like in this repository, should have the `iac` tag associated with them.
-
-Under `[resource_sync.config]`, is the name of the Repo resource under which resource files are found, `saphnet-compose-configs`. After the Repo being linked to is a list of resource files to use for the Resource Sync, which is simply `example-server.toml`; generally, the resource file used for this type of Server-specific Resource Sync is at the root of `saphnet-compose-configs` and is named after the server that is being targeted.
-
-As well, since our Komodo setup uses Tailscale, and we may want to have Stacks be able to bind to only the Tailscale interfaces (by using a Tailscale IP address), you will want to add an entry to the `saphnet-update-tailscale-addresses` Action in `actions.toml`, with the Tailscale hostname and a short name of the Server, like this:
+Furthermore, since our Komodo setup uses Tailscale, and we may want to have Stacks be able to bind to only the Tailscale interfaces (by using a Tailscale IP address), you will want to add an entry to the `saphnet-update-tailscale-addresses` Action in `actions.toml`, with the Tailscale hostname and a short name of the Server, like this:
 ```
 [[action]]
 name = "saphnet-update-tailscale-addresses"
@@ -94,7 +81,7 @@ Each Builder resource is defined with `[[builder]]`. In this definition, the Bui
 
 Under `[builder.config]`, the type is defined as `Server` (this needs to be specified, as Builders can be Server resources or AWS instances), and then the server ID of the Server being used is specified, as `example-server`, in this case.
 
-These three configuration fragments (or the first two) should be enough to properly set up a server for our Komodo setup.
+These configuration fragment(s) should be enough to properly set up a server for our Komodo setup.
 
 ## On procedures
 
