@@ -105,5 +105,5 @@ executions = [
 name = "Run Stack Syncs"
 enabled = true
 executions = [
-  { execution.type = "RunProcedure", execution.params.rocedure = "saphnet-run-iac-stack-sync", enabled = true },
+  { execution.type = "RunProcedure", execution.params.procedure = "saphnet-run-iac-stack-sync", enabled = true },
 ]
