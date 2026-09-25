@@ -3,8 +3,6 @@ The main resource sync to use for Komodo in the Sapphic Homelab/Home Server
 
 Note that this is intended to work in tandem with [saphnet-compose-configs](https://github.com/AnarchoBooleanism/saphnet-compose-configs), and be initially introduced to host systems in [saphnet-nixos-configs](https://github.com/AnarchoBooleanism/saphnet-nixos-configs).
 
-**NOTE** (Last tested with Komodo v2.2.0): `resource-sync` resources seem to have no effect on a Komodo server, so, for now, try to manually add each Resource Sync!
-
 Documentation on Komodo resources and resource syncs:
 - Sync Resources: https://komo.do/docs/automate/sync-resources
 - Procedures and Actions: https://komo.do/docs/automate/procedures
@@ -41,10 +39,10 @@ address = "https://example.server.saphnet.xyz:8120"
 region = "Example region"
 enabled = true
 
-[[resource-sync]]
+[[resource_sync]]
 name = "example-server_stack-sync"
 tags = ["stack-sync", "iac"]
-[resource-sync.config]
+[resource_sync.config]
 linked_repo = "saphnet-compose-configs"
 resource_path = ["example-server.toml"]
 ```
@@ -55,9 +53,9 @@ In this example, the corresponding Server resource is defined with `[[server]]`,
 
 Furthermore, since, for our purposes, Komodo servers are generally for running Stacks, we have a definition for a Resource Sync resource, tied to a resource file in the `saphnet-compose-configs` repository, for synchronizing the state of Stack resources to the state defined in the `saphnet-compose-configs`. For our purposes, we only need to care about having this type of Resource Sync for each server, as it is the job of the resource file being referred to care about handling individual Stack resources.
 
-Each Resource Sync resource is defined with `[[resource-sync]]`. In this definition, the Resource Sync is named as `example-server_stack-sync`; generally, these types of Resource Syncs are named after their target servers, with `_stack-sync` affixed at the end. This resource, then, has the tags `stack-sync` and `iac` associated with it; all Resource Syncs of this kind should have the `stack-sync` tag, and all non-Server resources managed through GitOps, like in this repository, should have the `iac` tag associated with them.
+Each Resource Sync resource is defined with `[[resource_sync]]`. In this definition, the Resource Sync is named as `example-server_stack-sync`; generally, these types of Resource Syncs are named after their target servers, with `_stack-sync` affixed at the end. This resource, then, has the tags `stack-sync` and `iac` associated with it; all Resource Syncs of this kind should have the `stack-sync` tag, and all non-Server resources managed through GitOps, like in this repository, should have the `iac` tag associated with them.
 
-Under `[resource-sync.config]`, is the name of the Repo resource under which resource files are found, `saphnet-compose-configs`. After the Repo being linked to is a list of resource files to use for the Resource Sync, which is simply `example-server.toml`; generally, the resource file used for this type of Server-specific Resource Sync is at the root of `saphnet-compose-configs` and is named after the server that is being targeted.
+Under `[resource_sync.config]`, is the name of the Repo resource under which resource files are found, `saphnet-compose-configs`. After the Repo being linked to is a list of resource files to use for the Resource Sync, which is simply `example-server.toml`; generally, the resource file used for this type of Server-specific Resource Sync is at the root of `saphnet-compose-configs` and is named after the server that is being targeted.
 
 As well, since our Komodo setup uses Tailscale, and we may want to have Stacks be able to bind to only the Tailscale interfaces (by using a Tailscale IP address), you will want to add an entry to the `saphnet-update-tailscale-addresses` Action in `actions.toml`, with the Tailscale hostname and a short name of the Server, like this:
 ```

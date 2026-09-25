@@ -1,5 +1,3 @@
-## NOTE: resource-sync resources in TOML files seem to have no effect on Komodo server's Resource Syncs
-
 [[server]]
 name = "control-server"
 tags = ["control"]
@@ -8,10 +6,10 @@ address = "https://periphery:8120"
 region = "Homelab"
 enabled = true
 
-[[resource-sync]]
+[[resource_sync]]
 name = "control-server_stack-sync"
 tags = ["stack-sync", "iac"]
-[resource-sync.config]
+[resource_sync.config]
 linked_repo = "saphnet-compose-configs"
 resource_path = ["control-server.toml"]
 
@@ -25,10 +23,10 @@ address = "https://docker-host-core.int-net.saphnet.xyz:8120"
 region = "Homelab"
 enabled = true
 
-[[resource-sync]]
+[[resource_sync]]
 name = "docker-host-core_stack-sync"
 tags = ["stack-sync", "iac"]
-[resource-sync.config]
+[resource_sync.config]
 linked_repo = "saphnet-compose-configs"
 resource_path = ["docker-host-core.toml"]
 
@@ -42,10 +40,10 @@ address = "https://docker-host-pve3.int-net.saphnet.xyz:8120"
 region = "Homelab"
 enabled = true
 
-[[resource-sync]]
+[[resource_sync]]
 name = "docker-host-pve3_stack-sync"
 tags = ["stack-sync", "iac"]
-[resource-sync.config]
+[resource_sync.config]
 linked_repo = "saphnet-compose-configs"
 resource_path = ["docker-host-pve3.toml"]
 
@@ -59,10 +57,10 @@ address = "https://docker-host-pve4.int-net.saphnet.xyz:8120"
 region = "Homelab"
 enabled = true
 
-[[resource-sync]]
+[[resource_sync]]
 name = "docker-host-pve4_stack-sync"
 tags = ["stack-sync", "iac"]
-[resource-sync.config]
+[resource_sync.config]
 linked_repo = "saphnet-compose-configs"
 resource_path = ["docker-host-pve4.toml"]
 
@@ -77,10 +75,10 @@ external_address = "https://vps1.saphnet.xyz"
 region = "Los Angeles, CA (VPS)"
 enabled = true
 
-[[resource-sync]]
+[[resource_sync]]
 name = "vps1_stack-sync"
 tags = ["stack-sync", "iac"]
-[resource-sync.config]
+[resource_sync.config]
 linked_repo = "saphnet-compose-configs"
 resource_path = ["vps1.toml"]
 
