@@ -20,6 +20,7 @@ const SERVERS = [
 
 // The Periphery agent on this server needs access to Tailscale MagicDNS
 const TARGET_SERVER = "control-server";
+const TERMINAL_NAME = "saphnet-update-tailscale-addresses";
 
 for (const server of SERVERS) {
   let resolvedIp = "";
@@ -28,8 +29,9 @@ for (const server of SERVERS) {
   // awk SHOULD make sure we only get one line (and no trailing newlines either)...
   await komodo.execute_server_terminal({
     server: TARGET_SERVER,
+    terminal: TERMINAL_NAME,
     command: `getent ahostsv4 ${server.hostname} | awk '{printf $1; exit}'`,
-    init: { command: "bash" },
+    init: { command: "bash", recreate: "Always" },
   }, {
     onLine: (line) => {
       if (line.trim()) {
@@ -44,6 +46,15 @@ for (const server of SERVERS) {
         console.log(`Success checking ${server.hostname}!`);
       }
     }
+  });
+
+  // To avoid clutter
+  await komodo.write("DeleteTerminal", {
+    target: { 
+      type: "Server", 
+      params: { server: TARGET_SERVER } 
+    },
+    terminal: TERMINAL_NAME
   });
 
   if (resolvedIp) {
