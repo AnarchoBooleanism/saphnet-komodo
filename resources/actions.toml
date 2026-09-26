@@ -2,34 +2,28 @@
 name = "saphnet-update-tailscale-addresses"
 description = """
 Automatically updates the values of TAILSCALE_IP address with the Tailscale IP addresses of all Servers.
+
+Arguments:
+- variableBase - The base name of the variables being updated (by default, "TAILSCALE_IP_", which will lead to names like "TAILSCALE_IP_CONTROL")
+- targetServer - The name of the Server that will run the necessary Terminal (this Server needs access to Tailscale's MagicDNS)
+- terminalName - The name of the (ephemeral) Terminal to open
+- servers - An array of objects that represent each Server
+  - hostname - The Tailscale hostname of the Server
+  - varSuffix - The short name of the Server to use as a suffix for its corresponding variable name
 """
 tags = ["iac"]
 [action.config]
 schedule_format = "Cron"
 schedule_enabled = false
 file_contents = """
-// The final variable names will be similar to "TAILSCALE_IP_VPS1"
-const VARIABLE_BASE = "TAILSCALE_IP_";
-const SERVERS = [
-  { hostname: "control-server", varSuffix: "CONTROL" },
-  { hostname: "docker-host-core", varSuffix: "CORE" },
-  { hostname: "docker-host-pve3", varSuffix: "PVE3" },
-  { hostname: "docker-host-pve4", varSuffix: "PVE4" },
-  { hostname: "vps1", varSuffix: "VPS1" }
-];
-
-// The Periphery agent on this server needs access to Tailscale MagicDNS
-const TARGET_SERVER = "control-server";
-const TERMINAL_NAME = "saphnet-update-tailscale-addresses";
-
-for (const server of SERVERS) {
+for (const server of ARGS.servers) {
   let resolvedIp = "";
 
   console.log(`Checking server ${server.hostname}...`);
   // awk SHOULD make sure we only get one line (and no trailing newlines either)...
   await komodo.execute_server_terminal({
-    server: TARGET_SERVER,
-    terminal: TERMINAL_NAME,
+    server: ARGS.targetServer,
+    terminal: ARGS.terminalName,
     command: `getent ahostsv4 ${server.hostname} | awk '{printf $1; exit}'`,
     init: { command: "bash", recreate: "Always" },
   }, {
@@ -52,13 +46,13 @@ for (const server of SERVERS) {
   await komodo.write("DeleteTerminal", {
     target: { 
       type: "Server", 
-      params: { server: TARGET_SERVER } 
+      params: { server: ARGS.targetServer } 
     },
-    terminal: TERMINAL_NAME
+    terminal: ARGS.terminalName
   });
 
   if (resolvedIp) {
-    let variableName = `${VARIABLE_BASE}${server.varSuffix}`.toUpperCase();
+    let variableName = `${ARGS.variableBase}${server.varSuffix}`.toUpperCase();
 
     // Check if variable exists, this is clunky but it hopefully is O(1),
     // depending on the back-end implementation
@@ -93,5 +87,20 @@ for (const server of SERVERS) {
   }
 
   console.log();
+}
+"""
+arguments_format = "json"
+arguments = """
+{
+  "variableBase": "TAILSCALE_IP_",
+  "targetServer": "control-server",
+  "terminalName": "saphnet-update-tailscale-addresses",
+  "servers": [
+    { "hostname": "control-server", "varSuffix": "CONTROL" },
+    { "hostname": "docker-host-core", "varSuffix": "CORE" },
+    { "hostname": "docker-host-pve3", "varSuffix": "PVE3" },
+    { "hostname": "docker-host-pve4", "varSuffix": "PVE4" },
+    { "hostname": "vps1", "varSuffix": "VPS1" }
+  ]
 }
 """
