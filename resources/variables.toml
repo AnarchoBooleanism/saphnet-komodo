@@ -18,6 +18,26 @@ value = "https://s3.nas1.int.saphnet.xyz"
 is_secret = false
 
 [[variable]]
+name = "SMTP_FROM_EMAIL"
+value = "homelab@saphnet.xyz"
+is_secret = false
+
+[[variable]]
+name = "SMTP_SERVER_HOSTNAME"
+value = "mail.privateemail.net"
+is_secret = false
+
+[[variable]]
+name = "SMTP_SERVER_PORT"
+value = "465" # This means implicit TLS (not STARTTLS)
+is_secret = false
+
+[[variable]]
+name = "SMTP_USERNAME"
+value = "homelab@saphnet.xyz"
+is_secret = false
+
+[[variable]]
 name = "TIMEZONE"
 value = "America/Los_Angeles"
 is_secret = false
